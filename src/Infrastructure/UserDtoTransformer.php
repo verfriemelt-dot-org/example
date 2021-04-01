@@ -4,14 +4,14 @@
 
     namespace App\Infrastructure;
 
-    use \App\Domain\User\UserDto;
+    use \App\Domain\User\UserResponseDto;
 
     class UserDtoTransformer
     implements UserDtoTransformerInterface {
 
-        public function transformFromObject( UserEntityInterface $user ): UserDto {
+        public function transformFromObject( UserEntityInterface $user ): UserResponseDto {
 
-            return new UserDto(
+            return new UserResponseDto(
                 $user->getId(),
                 $user->getName(),
                 $user->getLastname(),

@@ -4,25 +4,32 @@
 
     namespace App\Controller;
 
+    use \App\Domain\User\UserInputDto;
+    use \App\Domain\User\UserPersisterInterface;
     use \App\Domain\User\UserRepositoryInterface;
     use \App\Infrastructure\UserDtoTransformerInterface;
     use \Symfony\Component\HttpFoundation\JsonResponse;
     use \Symfony\Component\HttpFoundation\Request;
+    use \Symfony\Component\HttpFoundation\Response;
     use \Symfony\Component\Routing\Annotation\Route;
 
     class UserController
     extends AbstractApiController {
 
-        private UserRepositoryInterface $repository;
+        protected UserRepositoryInterface $repository;
 
-        private UserDtoTransformerInterface $transformer;
+        protected UserDtoTransformerInterface $transformer;
+
+        protected UserPersisterInterface $persister;
 
         public function __construct(
             UserRepositoryInterface $repository,
-            UserDtoTransformerInterface $transformer
+            UserDtoTransformerInterface $transformer,
+            UserPersisterInterface $persister
         ) {
             $this->repository  = $repository;
             $this->transformer = $transformer;
+            $this->persister   = $persister;
         }
 
         #[ Route( '/api/v1/user', name: 'user-list', methods: [ 'get' ] ) ]
@@ -41,8 +48,11 @@
         }
 
         #[ Route( '/api/v1/user', name: 'user-create', methods: [ 'post' ] ) ]
-        public function create( Request $request ): JsonResponse {
-            return new JsonResponse( [] );
+        public function create( Request $request, UserInputDto $userInput ): JsonResponse {
+
+            $userResponseDto = $this->persister->mapAndPersist( $userInput );
+
+            return $this->emitJsonResponse( $userResponseDto );
         }
 
         #[ Route( '/api/v1/user/{id}', name: 'user-update', methods: [ 'put', 'patch' ] ) ]
@@ -52,7 +62,7 @@
 
         #[ Route( '/api/v1/user/{id}', name: 'user-delete', methods: [ 'delete' ] ) ]
         public function delete( Request $request ): JsonResponse {
-            return new JsonResponse( [] );
+            return new JsonResponse( [], Response::HTTP_NO_CONTENT );
         }
 
     }

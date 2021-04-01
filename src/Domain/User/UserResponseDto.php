@@ -4,12 +4,18 @@
 
     namespace App\Domain\User;
 
-    class UserDto {
+    use \App\DtoInterface;
+    use \Symfony\Component\Validator\Constraints\NotBlank;
+
+    class UserResponseDto
+    implements DtoInterface {
 
         private int $id;
 
+        #[ NotBlank ]
         private string $name;
 
+        #[ NotBlank ]
         private string $lastname;
 
         public function __construct( int $id, string $name, string $lastname ) {

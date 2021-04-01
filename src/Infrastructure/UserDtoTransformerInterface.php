@@ -4,21 +4,21 @@
 
     namespace App\Infrastructure;
 
-    use \App\Domain\User\UserDto;
+    use \App\Domain\User\UserResponseDto;
 
     interface UserDtoTransformerInterface {
 
         /**
          * transoforms a single UserEntity to the UserDTO
          * @param UserEntityInterface $user
-         * @return UserDto
+         * @return UserResponseDto
          */
-        public function transformFromObject( UserEntityInterface $user ): UserDto;
+        public function transformFromObject( UserEntityInterface $user ): UserResponseDto;
 
         /**
          * transforms an array user UserEntities to UserDTOs
          * @param UserEntityInterface $users
-         * @return UserDto[]
+         * @return UserResponseDto[]
          */
         public function transformFromObjects( UserEntityInterface ... $users ): array;
     }

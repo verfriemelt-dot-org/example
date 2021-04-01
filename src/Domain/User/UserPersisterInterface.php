@@ -4,7 +4,9 @@
 
     namespace App\Domain\User;
 
+    use \App\Infrastructure\UserEntityInterface;
+
     interface UserPersisterInterface {
 
-        public function mapAndPersist( UserDto $user ): bool;
+        public function mapAndPersist( UserInputDto $userInputDto, UserEntityInterface $userEntity = null ): UserResponseDto;
     }

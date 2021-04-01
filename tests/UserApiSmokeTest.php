@@ -12,24 +12,26 @@
          *
          * @dataProvider endpoints
          */
-        public function testEndpoints( string $method, string $url ) {
+        public function testEndpoints( string $method, string $url, string $content = null ) {
 
             $client = static::createClient();
-            $client->request( $method, $url );
+            $client->request( $method, $url, content: $content );
 
             $this->assertTrue( $client->getResponse()->isSuccessful() );
         }
 
         public function endpoints() {
 
-            yield [ 'GET', '/api/v1/user' ];
-            yield [ 'GET', '/api/v1/user/1' ];
+            $user = '{"name":"manfred","lastname":"testmann"}';
 
-            yield [ 'POST', '/api/v1/user' ];
-            yield [ 'PATCH', '/api/v1/user/1' ];
-            yield [ 'PUT', '/api/v1/user/1' ];
+            yield [ 'GET', '/api/v1/user', null ];
+            yield [ 'GET', '/api/v1/user/1', null ];
 
-            yield [ 'DELETE', '/api/v1/user/1' ];
+            yield [ 'POST', '/api/v1/user', $user ];
+            yield [ 'PATCH', '/api/v1/user/1', $user ];
+            yield [ 'PUT', '/api/v1/user/1', $user ];
+
+            yield [ 'DELETE', '/api/v1/user/1', null ];
         }
 
     }
