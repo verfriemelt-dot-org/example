@@ -2,11 +2,10 @@
 
     declare(strict_types = 1);
 
-    namespace App\Entity;
+    namespace App\Infrastructure;
 
-    use \App\Entity\UserEntityInterface;
 
-    class UserEntity
+    abstract class AbstractUserEntity
     implements UserEntityInterface {
 
         protected int $id;

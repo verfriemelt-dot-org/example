@@ -2,10 +2,10 @@
 
     declare( strict_types = 1 );
 
-    namespace App\Repository\User;
+    namespace App\Infrastructure\RandomUser;
 
-    use \App\Entity\UserEntity;
-    use \App\Entity\UserEntityInterface;
+    use \App\Domain\User\UserRepositoryInterface;
+    use \App\Infrastructure\UserEntityInterface;
 
     class RandomUserRepository
     implements UserRepositoryInterface {
@@ -51,7 +51,7 @@
 
         public function findOneById( int $id ): UserEntityInterface {
 
-            $user = new UserEntity();
+            $user = new RandomUserEntity();
 
             [$name, $lastname] = $this->pickName();
 

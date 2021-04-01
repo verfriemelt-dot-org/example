@@ -2,9 +2,9 @@
 
     declare( strict_types = 1 );
 
-    namespace App\Repository\User;
+    namespace App\Domain\User;
 
-    use \App\Entity\UserEntityInterface;
+    use \App\Infrastructure\UserEntityInterface;
 
     interface UserRepositoryInterface {
 
@@ -12,9 +12,9 @@
 
         /**
          *
-         * @param int $amount 
+         * @param int $amount
          * @param int $offset
          * @return UserEntityInterface[]
          */
-        public function take( int $amount = 10, int $offset = 0): array;
+        public function take( int $amount = 10, int $offset = 0 ): array;
     }

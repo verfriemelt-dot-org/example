@@ -4,38 +4,37 @@
 
     namespace App\Controller;
 
-    use \App\Dto\UserResponseDtoTransformerInterface;
-    use \App\Repository\User\UserRepositoryInterface;
+    use \App\Domain\User\UserRepositoryInterface;
+    use \App\Infrastructure\UserDtoTransformerInterface;
     use \Symfony\Component\HttpFoundation\JsonResponse;
     use \Symfony\Component\HttpFoundation\Request;
-    use \Symfony\Component\HttpFoundation\Response;
     use \Symfony\Component\Routing\Annotation\Route;
 
     class UserController
     extends AbstractApiController {
 
-        private UserRepositoryInterface $repo;
+        private UserRepositoryInterface $repository;
 
-        private UserResponseDtoTransformerInterface $transformer;
+        private UserDtoTransformerInterface $transformer;
 
         public function __construct(
-            UserRepositoryInterface $repo,
-            UserResponseDtoTransformerInterface $transformer,
+            UserRepositoryInterface $repository,
+            UserDtoTransformerInterface $transformer
         ) {
-            $this->repo        = $repo;
+            $this->repository  = $repository;
             $this->transformer = $transformer;
         }
 
         #[ Route( '/api/v1/user', name: 'user-list', methods: [ 'get' ] ) ]
         public function userlist( Request $request ): JsonResponse {
-            $dtos = $this->transformer->transformFromObjects( ... $this->repo->take( 10 ) );
+            $dtos = $this->transformer->transformFromObjects( ... $this->repository->take( 10 ) );
             return $this->emitJsonResponse( $dtos );
         }
 
         #[ Route( '/api/v1/user/{id}', name: 'user', methods: [ 'get' ] ) ]
         public function user( int $id, Request $request ): JsonResponse {
 
-            $instance = $this->repo->findOneById( $id );
+            $instance = $this->repository->findOneById( $id );
             $dto      = $this->transformer->transformFromObject( $instance );
 
             return $this->emitJsonResponse( $dto );

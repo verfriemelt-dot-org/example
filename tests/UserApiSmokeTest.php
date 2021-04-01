@@ -28,7 +28,7 @@
             yield [ 'POST', '/api/v1/user' ];
             yield [ 'PATCH', '/api/v1/user/1' ];
             yield [ 'PUT', '/api/v1/user/1' ];
-            
+
             yield [ 'DELETE', '/api/v1/user/1' ];
         }
 

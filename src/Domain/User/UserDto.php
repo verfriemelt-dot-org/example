@@ -2,9 +2,9 @@
 
     declare( strict_types = 1 );
 
-    namespace App\Dto;
+    namespace App\Domain\User;
 
-    class UserResponseDto {
+    class UserDto {
 
         private int $id;
 
