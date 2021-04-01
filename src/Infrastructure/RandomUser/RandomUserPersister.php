@@ -9,9 +9,7 @@
     implements UserPersisterInterface {
 
         public function mapAndPersist( UserDto $user ): bool {
-
-            
-
+            return false;
         }
 
     }
