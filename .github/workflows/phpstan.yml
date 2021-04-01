@@ -1,0 +1,20 @@
+name: phpstan
+
+on: push
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Install dependencies
+      uses: php-actions/composer@v5
+      with:
+        php_version: 8.0
+        version: 2
+
+    - name: run phpstan
+      run: php vendor/bin/phpstan.phar analyse --level max --error-format=github src
