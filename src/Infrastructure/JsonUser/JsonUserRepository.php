@@ -27,7 +27,7 @@
         private Serializer $serializer;
 
         /** @var JsonUserEntity[] */
-        private array $collection;
+        private array $collection = [];
 
         public function __construct(
             KernelInterface $appKernel,
@@ -43,6 +43,11 @@
         }
 
         private function loadFromDisk(): void {
+
+            if ( !file_exists( $this->getStoragePath() ) ) {
+                return;
+            }
+
             $users = $this->serializer->deserialize(
                 file_get_contents( $this->getStoragePath() ),
                 'App\Infrastructure\JsonUser\JsonUserEntity[]',
@@ -122,8 +127,17 @@
             return $user;
         }
 
+        public function getNextUserId(): int {
+
+            if ( count( $this->collection ) === 0 ) {
+                return 1;
+            }
+
+            return (int) max( array_keys( $this->collection ) ) + 1;
+        }
+
         protected function addUser( JsonUserEntity $user ): JsonUserEntity {
-            $user->setId( (int) max( array_keys( $this->collection ) ) + 1 );
+            $user->setId( $this->getNextUserId() );
             $this->collection[$user->getId()] = $user;
 
             return $user;
