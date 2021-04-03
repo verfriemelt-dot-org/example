@@ -1,5 +1,7 @@
 <?php
 
+    declare( strict_types = 1 );
+
     namespace App\Tests;
 
     use \Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -48,17 +50,24 @@
             );
 
             $this->assertFalse( $client->getResponse()->isSuccessful() );
-            $this->assertStringContainsString( $expectedMessages, json_decode( $client->getResponse()->getContent() )->error->message );
+            $this->assertContains( $expectedMessages, json_decode( $client->getResponse()->getContent() )->error->validationErrors );
+        }
+
+        public function testMissingPayload() {
+
+            $client = $this->makeRequest( 'user-create', null );
+            $this->assertFalse( $client->getResponse()->isSuccessful() );
+            $this->assertStringContainsString( 'request payload empty', json_decode( $client->getResponse()->getContent() )->error->message );
         }
 
         public function invalidInputProvider() {
-            yield [ null, 'request payload empty' ];
+
             yield [ [ 'lastname' => 'test' ], 'name must not be empty' ];
             yield [ [ 'name' => 'test' ], 'lastname must not be empty' ];
             yield [ [ 'name' => 'test', "lastname" => null ], 'lastname must not be empty' ];
             yield [ [ 'name' => 'test', "lastname" => "" ], 'lastname must not be empty' ];
-            yield [ [ 'name' => 'test', "lastname" => str_repeat( 'a', 100 ) ], '50 characters or less' ];
-            yield [ [ 'name' => str_repeat( 'a', 100 ), "lastname" => 'test' ], '50 characters or less' ];
+            yield [ [ 'name' => 'test', "lastname" => str_repeat( 'a', 100 ) ], 'This value is too long. It should have 50 characters or less.' ];
+            yield [ [ 'name' => str_repeat( 'a', 100 ), "lastname" => 'test' ], 'This value is too long. It should have 50 characters or less.' ];
         }
 
     }

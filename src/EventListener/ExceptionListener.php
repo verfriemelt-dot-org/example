@@ -22,9 +22,7 @@
 
             $exception = $event->getThrowable();
 
-            $statusCode = $exception instanceof HttpExceptionInterface
-                ? $exception->getStatusCode()
-                : Response::HTTP_INTERNAL_SERVER_ERROR;
+            $statusCode = $exception instanceof HttpExceptionInterface ? $exception->getStatusCode() : Response::HTTP_INTERNAL_SERVER_ERROR;
 
             $payload = [
                 'error' => [
@@ -33,9 +31,15 @@
                 ],
             ];
 
-            // print stracktrace only during dev
-            if ( $this->kernel->getEnvironment() === 'dev' ) {
-                $payload['error']['trace'] = $exception->getTrace();
+            if ( $exception instanceof \App\DtoValidationException ) {
+
+                $payload['error']['validationErrors'] = $exception->getValidationErrors();
+            } else {
+
+                // print stracktrace only during dev
+                if ( $this->kernel->getEnvironment() === 'dev' ) {
+                    $payload['error']['trace'] = $exception->getTrace();
+                }
             }
 
             $response = new JsonResponse( $payload, $statusCode );

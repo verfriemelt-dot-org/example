@@ -5,19 +5,29 @@
     namespace App;
 
     use \RuntimeException;
-    use \Symfony\Component\HttpFoundation\Response;
-    use \Throwable;
+    use \Symfony\Component\Validator\ConstraintViolationListInterface;
 
     class DtoValidationException
     extends RuntimeException {
 
-        public int $status;
+        /** @phpstan-ignore-next-line */
+        private ConstraintViolationListInterface $validationErrors;
 
-        public function __construct( string $message = "", int $code = 0, Throwable $previous = null ) {
+        /** @phpstan-ignore-next-line */
+        public function setValidationErrors( ConstraintViolationListInterface $errors ): static {
+            $this->validationErrors = $errors;
+            return $this;
+        }
 
-            $this->status = Response::HTTP_BAD_REQUEST;
+        /** @phpstan-ignore-next-line */
+        public function getValidationErrors(): array {
 
-            parent::__construct( $message, $code, $previous );
+            $errors = [];
+            foreach ( $this->validationErrors as $paramName => $violation ) {
+                $errors[] = (string) $violation->getMessage();
+            }
+
+            return $errors;
         }
 
     }

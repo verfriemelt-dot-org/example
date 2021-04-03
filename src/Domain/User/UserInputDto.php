@@ -13,23 +13,23 @@
 
         #[ NotBlank( message: 'name must not be empty' ) ]
         #[ Length( min: 1, max: 50 ) ]
-        private ?string $name;
+        private string $name = '';
 
-        #[ NotBlank( message: 'lastname must not be empty') ]
+        #[ NotBlank( message: 'lastname must not be empty' ) ]
         #[ Length( min: 1, max: 50 ) ]
-        private ?string $lastname;
+        private string $lastname = '';
 
-        public function __construct( string $name = null, string $lastname = null) {
+        public function __construct( string $name = null, string $lastname = null ) {
 
-            $this->name     = $name;
-            $this->lastname = $lastname;
+            $this->name     = $name ?: '';
+            $this->lastname = $lastname ?: '';
         }
 
-        public function getName(): ?string {
+        public function getName(): string {
             return $this->name;
         }
 
-        public function getLastname(): ?string {
+        public function getLastname(): string {
             return $this->lastname;
         }
 

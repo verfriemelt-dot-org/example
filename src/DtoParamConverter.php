@@ -6,6 +6,7 @@
     use \Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
     use \Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
     use \Symfony\Component\HttpFoundation\Request;
+    use \Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
     use \Symfony\Component\Serializer\Encoder\JsonEncoder;
     use \Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
     use \Symfony\Component\Serializer\Serializer;
@@ -26,7 +27,7 @@
             $data  = $request->getContent( asResource: false );
 
             if ( empty( $data ) ) {
-                throw new DtoValidationException( 'request payload empty' );
+                throw new BadRequestHttpException( 'request payload empty' );
             }
 
             $serializer = new Serializer( [ new GetSetMethodNormalizer() ], [ new JsonEncoder() ] );
@@ -36,18 +37,7 @@
 
             $validationErrors = $this->validator->validate( $dto );
             if ( count( $validationErrors ) > 0 ) {
-
-                /**
-                 * ConstraintViolationList implements __toString() which is not
-                 * defined by the interface, hence
-                 *
-                 * "cannot cast to string"
-                 *
-                 * is a false positive
-                 * 
-                 * @phpstan-ignore-next-line
-                 */
-                throw new DtoValidationException( (string) $validationErrors );
+                throw (new DtoValidationException( 'DTO Validation failed' ) )->setValidationErrors( $validationErrors );
             }
 
             // append DTO instance to request attributes

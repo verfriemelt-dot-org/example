@@ -19,7 +19,7 @@
         }
 
         public function transformFromObjects( UserEntityInterface ...$users ): array {
-            
+
             return array_map(
                 fn( UserEntityInterface $user ) => $this->transformFromObject( $user ),
                 $users

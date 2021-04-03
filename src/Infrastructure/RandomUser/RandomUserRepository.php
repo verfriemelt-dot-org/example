@@ -4,6 +4,7 @@
 
     namespace App\Infrastructure\RandomUser;
 
+    use \App\Domain\User\UserInputDto;
     use \App\Domain\User\UserRepositoryInterface;
     use \App\Infrastructure\UserEntityInterface;
 
@@ -62,12 +63,34 @@
             return $user;
         }
 
-        public function take( int $amount = 10, int $offset = 0 ): array {
+        public function all( int $amount = 10, int $offset = 0 ): array {
 
             return array_map(
                 fn( int $id ) => $this->findOneById( $id ),
                 range( $offset + 1, $offset + $amount, 1 )
             );
+        }
+
+        public function mapAndPersist( UserInputDto $userDto, UserEntityInterface $user = null ): UserEntityInterface {
+
+            $user = new RandomUserEntity();
+            $user->setLastname( $userDto->getLastname() );
+            $user->setName( $userDto->getName() );
+            $user->setId( (int) ceil( rand() * 1000 ) );
+
+            return $user;
+        }
+
+        public function persist( UserEntityInterface $user ): UserEntityInterface {
+            return $user;
+        }
+
+        public function delete( UserEntityInterface $user ): bool {
+            return false;
+        }
+
+        public function flush(): static {
+            return $this;
         }
 
     }

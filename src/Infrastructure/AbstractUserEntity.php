@@ -4,11 +4,10 @@
 
     namespace App\Infrastructure;
 
-
     abstract class AbstractUserEntity
     implements UserEntityInterface {
 
-        protected int $id;
+        protected ?int $id = null;
 
         protected string $name;
 
@@ -16,7 +15,7 @@
 
         protected ?string $password = null;
 
-        public function getId(): int {
+        public function getId(): ?int {
             return $this->id;
         }
 
@@ -32,7 +31,7 @@
             return $this->password;
         }
 
-        public function setId( int $id ): static {
+        public function setId( ?int $id ): static {
             $this->id = $id;
             return $this;
         }

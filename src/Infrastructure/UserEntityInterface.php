@@ -6,7 +6,7 @@
 
     interface UserEntityInterface {
 
-        public function getId(): int;
+        public function getId(): ?int;
 
         public function getName(): string;
 
@@ -14,7 +14,7 @@
 
         public function getPassword(): ?string;
 
-        public function setId( int $id ): static;
+        public function setId( ?int $id ): static;
 
         public function setName( string $name ): static;
 

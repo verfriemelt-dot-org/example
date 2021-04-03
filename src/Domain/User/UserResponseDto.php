@@ -10,7 +10,7 @@
     class UserResponseDto
     implements DtoInterface {
 
-        private int $id;
+        private ?int $id = null;
 
         #[ NotBlank ]
         private string $name;
@@ -18,14 +18,14 @@
         #[ NotBlank ]
         private string $lastname;
 
-        public function __construct( int $id, string $name, string $lastname ) {
+        public function __construct( ?int $id, string $name, string $lastname ) {
 
             $this->id       = $id;
             $this->name     = $name;
             $this->lastname = $lastname;
         }
 
-        public function getId(): int {
+        public function getId(): ?int {
             return $this->id;
         }
 

@@ -8,13 +8,19 @@
 
     interface UserRepositoryInterface {
 
+        public function mapAndPersist( UserInputDto $userDto, UserEntityInterface $user = null ): UserEntityInterface;
+
+        public function persist( UserEntityInterface $user ): UserEntityInterface;
+
         public function findOneById( int $int ): UserEntityInterface;
 
         /**
-         *
-         * @param int $amount
-         * @param int $offset
+         * returns all stored users
          * @return UserEntityInterface[]
          */
-        public function take( int $amount = 10, int $offset = 0 ): array;
+        public function all(): array;
+
+        public function delete( UserEntityInterface $user ): bool;
+
+        public function flush(): static;
     }

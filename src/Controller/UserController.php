@@ -4,8 +4,8 @@
 
     namespace App\Controller;
 
+    use \App\Controller\AbstractApiController;
     use \App\Domain\User\UserInputDto;
-    use \App\Domain\User\UserPersisterInterface;
     use \App\Domain\User\UserRepositoryInterface;
     use \App\Infrastructure\UserDtoTransformerInterface;
     use \Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,21 +20,17 @@
 
         protected UserDtoTransformerInterface $transformer;
 
-        protected UserPersisterInterface $persister;
-
         public function __construct(
             UserRepositoryInterface $repository,
             UserDtoTransformerInterface $transformer,
-            UserPersisterInterface $persister
         ) {
             $this->repository  = $repository;
             $this->transformer = $transformer;
-            $this->persister   = $persister;
         }
 
         #[ Route( '/api/v1/user', name: 'user-list', methods: [ 'get' ] ) ]
         public function userlist( Request $request ): JsonResponse {
-            $dtos = $this->transformer->transformFromObjects( ... $this->repository->take( 10 ) );
+            $dtos = $this->transformer->transformFromObjects( ... $this->repository->all() );
             return $this->emitJsonResponse( $dtos );
         }
 
@@ -50,18 +46,27 @@
         #[ Route( '/api/v1/user', name: 'user-create', methods: [ 'post' ] ) ]
         public function create( Request $request, UserInputDto $userInput ): JsonResponse {
 
-            $userResponseDto = $this->persister->mapAndPersist( $userInput );
+            $userEntity = $this->repository->mapAndPersist( $userInput );
+            $dto        = $this->transformer->transformFromObject( $userEntity );
 
-            return $this->emitJsonResponse( $userResponseDto );
+            return $this->emitJsonResponse( $dto );
         }
 
         #[ Route( '/api/v1/user/{id}', name: 'user-update', methods: [ 'put', 'patch' ] ) ]
-        public function update( Request $request ): JsonResponse {
-            return new JsonResponse( [] );
+        public function update( int $id, Request $request, UserInputDto $userInput ): JsonResponse {
+
+            $instance       = $this->repository->findOneById( $id );
+            $updateInstance = $this->repository->mapAndPersist( $userInput, $instance );
+
+            return $this->emitJsonResponse( $this->transformer->transformFromObject( $updateInstance ) );
         }
 
         #[ Route( '/api/v1/user/{id}', name: 'user-delete', methods: [ 'delete' ] ) ]
-        public function delete( Request $request ): JsonResponse {
+        public function delete( int $id, Request $request ): JsonResponse {
+
+            $instance       = $this->repository->findOneById( $id );
+            $this->repository->delete( $instance );
+
             return new JsonResponse( [], Response::HTTP_NO_CONTENT );
         }
 

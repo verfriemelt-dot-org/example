@@ -18,7 +18,6 @@
 
             if ( $response === null ) {
                 $response = new JsonResponse();
-                $response->headers->set( 'Content-Type', 'application/problem+json' );
             }
 
             $serializer = new Serializer( [ new GetSetMethodNormalizer() ], [ new JsonEncoder() ] );
