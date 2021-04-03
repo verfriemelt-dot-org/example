@@ -25,12 +25,8 @@
             $class = $configuration->getClass();
             $data  = $request->getContent( asResource: false );
 
-            /**
-             * this is a false positive phpstan
-             * @phpstan-ignore-next-line
-             */
             if ( empty( $data ) ) {
-                throw new DtoValidationException( 'no data supplied' );
+                throw new DtoValidationException( 'request payload invalid' );
             }
 
             $serializer = new Serializer( [ new GetSetMethodNormalizer() ], [ new JsonEncoder() ] );

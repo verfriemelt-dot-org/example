@@ -14,9 +14,12 @@
     abstract class AbstractApiController
     extends AbstractController {
 
-        protected function emitJsonResponse( mixed $data, JsonResponse $response = null, int $statusCode = Response::HTTP_OK ): JsonResponse {
+        protected function emitJsonResponse( mixed $data, int $statusCode = Response::HTTP_OK, JsonResponse $response = null, ): JsonResponse {
 
-            $response = $response ?? new JsonResponse();
+            if ( $response === null ) {
+                $response = new JsonResponse();
+                $response->headers->set( 'Content-Type', 'application/problem+json' );
+            }
 
             $serializer = new Serializer( [ new GetSetMethodNormalizer() ], [ new JsonEncoder() ] );
 

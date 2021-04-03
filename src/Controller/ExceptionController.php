@@ -12,15 +12,22 @@
     class ExceptionController
     extends AbstractController {
 
-        public function show( Throwable $exception, DebugLoggerInterface $logger = null ) {
+        public function show( Throwable $exception, DebugLoggerInterface $logger = null ): JsonResponse {
 
-            if ( $this->container->getParameter( 'kernel.environment' ) === 'dev' ) {
-                throw $exception;
-            }
+            $statusCode = $exception->status ?? 500;
 
-            return new JsonResponse( [
-                'error' => 'something failed',
-            ] );
+            $payload = [
+                'error' => [
+                    'code'    => $exception->getCode(),
+                    'message' => $exception->getMessage(),
+                    'trace'   => $exception->getTrace()
+                ],
+            ];
+
+            $response = new JsonResponse( $payload, $statusCode );
+            $response->headers->set( 'Content-Type', 'application/problem+json' );
+
+            return $response;
         }
 
     }
