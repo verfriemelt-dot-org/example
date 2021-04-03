@@ -10,7 +10,10 @@
     class NullUserPersister
     implements UserPersisterInterface {
 
-        public function mapAndPersist( UserInputDto $userInputDto, UserEntityInterface $userEntity = null ): UserResponseDto {
+        public function mapAndPersist(
+            UserInputDto $userInputDto,
+            UserEntityInterface $userEntity = null
+        ): UserResponseDto {
             return new UserResponseDto( 1, $userInputDto->getName(), $userInputDto->getLastname() );
         }
 

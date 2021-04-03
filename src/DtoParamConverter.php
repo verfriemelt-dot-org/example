@@ -26,7 +26,7 @@
             $data  = $request->getContent( asResource: false );
 
             if ( empty( $data ) ) {
-                throw new DtoValidationException( 'request payload invalid' );
+                throw new DtoValidationException( 'request payload empty' );
             }
 
             $serializer = new Serializer( [ new GetSetMethodNormalizer() ], [ new JsonEncoder() ] );
@@ -34,14 +34,24 @@
             // map requestbody on DTO
             $dto = $serializer->deserialize( $data, $class, 'json' );
 
+            $validationErrors = $this->validator->validate( $dto );
+            if ( count( $validationErrors ) > 0 ) {
+
+                /**
+                 * ConstraintViolationList implements __toString() which is not
+                 * defined by the interface, hence
+                 *
+                 * "cannot cast to string"
+                 *
+                 * is a false positive
+                 * 
+                 * @phpstan-ignore-next-line
+                 */
+                throw new DtoValidationException( (string) $validationErrors );
+            }
+
             // append DTO instance to request attributes
             $request->attributes->set( $configuration->getName(), $dto );
-
-            $validationErrors = $this->validator->validate( $dto );
-
-            if ( !empty( $validationErrors->violations ) ) {
-                throw new DtoValidationException( $validationErrors->violations );
-            }
 
             return true;
         }
