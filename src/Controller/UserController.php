@@ -28,13 +28,23 @@
             $this->transformer = $transformer;
         }
 
-        #[ Route( '/api/v1/user', name: 'user-list', methods: [ 'get' ] ) ]
+        #[ Route(
+                '/api/v1/user',
+                name: 'user-list',
+                methods: [ 'get' ]
+            )
+        ]
         public function userlist( Request $request ): JsonResponse {
             $dtos = $this->transformer->transformFromObjects( ... $this->repository->all() );
             return $this->emitJsonResponse( $dtos );
         }
 
-        #[ Route( '/api/v1/user/{id}', name: 'user', methods: [ 'get' ] ) ]
+        #[ Route(
+                '/api/v1/user/{id}',
+                name: 'user',
+                methods: [ 'get' ]
+            )
+        ]
         public function user( int $id, Request $request ): JsonResponse {
 
             $instance = $this->repository->findOneById( $id );
@@ -43,7 +53,11 @@
             return $this->emitJsonResponse( $dto );
         }
 
-        #[ Route( '/api/v1/user', name: 'user-create', methods: [ 'post' ] ) ]
+        #[ Route(
+                '/api/v1/user',
+                name: 'user-create',
+                methods: [ 'post' ] )
+        ]
         public function create( Request $request, UserInputDto $userInput ): JsonResponse {
 
             $userEntity = $this->repository->mapAndPersist( $userInput );
@@ -52,7 +66,12 @@
             return $this->emitJsonResponse( $dto );
         }
 
-        #[ Route( '/api/v1/user/{id}', name: 'user-update', methods: [ 'put', 'patch' ] ) ]
+        #[ Route(
+                '/api/v1/user/{id}',
+                name: 'user-update',
+                methods: [ 'put', 'patch' ]
+            )
+        ]
         public function update( int $id, Request $request, UserInputDto $userInput ): JsonResponse {
 
             $instance       = $this->repository->findOneById( $id );
@@ -61,10 +80,15 @@
             return $this->emitJsonResponse( $this->transformer->transformFromObject( $updateInstance ) );
         }
 
-        #[ Route( '/api/v1/user/{id}', name: 'user-delete', methods: [ 'delete' ] ) ]
+        #[ Route(
+                '/api/v1/user/{id}',
+                name: 'user-delete',
+                methods: [ 'delete' ]
+            )
+        ]
         public function delete( int $id, Request $request ): JsonResponse {
 
-            $instance       = $this->repository->findOneById( $id );
+            $instance = $this->repository->findOneById( $id );
             $this->repository->delete( $instance );
 
             return new JsonResponse( [], Response::HTTP_NO_CONTENT );

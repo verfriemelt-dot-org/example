@@ -2,6 +2,7 @@
 
     namespace App\Tests;
 
+    use \App\Domain\User\UserRepositoryInterface;
     use \Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
     class UserApiSmokeTest
@@ -31,7 +32,7 @@
             yield [ 'PATCH', '/api/v1/user/1', $user ];
             yield [ 'PUT', '/api/v1/user/1', $user ];
 
-//            yield [ 'DELETE', '/api/v1/user/1', null ];
+            yield [ 'DELETE', '/api/v1/user/1', null ];
         }
 
     }

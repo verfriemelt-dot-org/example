@@ -37,8 +37,6 @@
             "Cantara",
         ];
 
-        private static int $count = 1;
-
         /**
          *
          * @return string[]
