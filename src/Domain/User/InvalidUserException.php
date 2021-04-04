@@ -6,5 +6,5 @@
 
     class InvalidUserException
     extends RuntimeException {
-        
+
     }
