@@ -12,9 +12,7 @@
         public function transformFromObject( UserEntityInterface $user ): UserResponseDto {
 
             return new UserResponseDto(
-                $user->getId(),
-                $user->getName(),
-                $user->getLastname(),
+                $user->getId(), $user->getName(), $user->getLastname(),
             );
         }
 
@@ -27,3 +25,4 @@
         }
 
     }
+    

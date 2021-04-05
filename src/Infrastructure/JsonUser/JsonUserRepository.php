@@ -37,7 +37,8 @@
             $this->kernel      = $appKernel;
             $this->storagePath = $storagePath;
 
-            $this->serializer = new Serializer( [ new GetSetMethodNormalizer(), new ArrayDenormalizer() ], [ new JsonEncoder() ] );
+            $this->serializer = new Serializer( [ new GetSetMethodNormalizer(), new ArrayDenormalizer() ],
+                [ new JsonEncoder() ] );
 
             $this->loadFromDisk();
         }
@@ -50,8 +51,7 @@
 
             $users = $this->serializer->deserialize(
                 file_get_contents( $this->getStoragePath() ),
-                'App\Infrastructure\JsonUser\JsonUserEntity[]',
-                'json'
+                'App\Infrastructure\JsonUser\JsonUserEntity[]', 'json'
             );
 
             // map out userids as key for the collection
@@ -66,7 +66,8 @@
 
         public function findOneById( int $id ): UserEntityInterface {
 
-            $user = array_filter( $this->collection, fn( JsonUserEntity $u ) => $u->getId() === $id );
+            $user = array_filter( $this->collection,
+                fn( JsonUserEntity $u ) => $u->getId() === $id );
 
             if ( count( $user ) === 0 ) {
                 throw new InvalidUserException( 'User Not Found' );
@@ -82,13 +83,15 @@
         protected function validateInstance( UserEntityInterface $user ): JsonUserEntity {
 
             if ( !$user instanceof JsonUserEntity ) {
-                throw new RuntimeException( sprintf( 'class %s not compatible with JsonUserEntity', $user::class ) );
+                throw new RuntimeException( sprintf( 'class %s not compatible with JsonUserEntity',
+                            $user::class ) );
             }
 
             return $user;
         }
 
-        public function mapAndPersist( UserInputDto $userDto, UserEntityInterface $user = null ): UserEntityInterface {
+        public function mapAndPersist( UserInputDto $userDto,
+            UserEntityInterface $user = null ): UserEntityInterface {
 
             if ( $user === null ) {
                 $user = new JsonUserEntity();
@@ -109,8 +112,7 @@
             file_put_contents(
                 $this->getStoragePath(),
                 $this->serializer->serialize(
-                    $this->collection,
-                    'json'
+                    $this->collection, 'json'
                 )
             );
 

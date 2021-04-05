@@ -19,7 +19,8 @@
         #[ Length( min: 1, max: 50 ) ]
         private string $lastname = '';
 
-        public function __construct( string $name = null, string $lastname = null ) {
+        public function __construct( string $name = null,
+            string $lastname = null ) {
 
             $this->name     = $name ?: '';
             $this->lastname = $lastname ?: '';

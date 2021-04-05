@@ -69,7 +69,8 @@
             );
         }
 
-        public function mapAndPersist( UserInputDto $userDto, UserEntityInterface $user = null ): UserEntityInterface {
+        public function mapAndPersist( UserInputDto $userDto,
+            UserEntityInterface $user = null ): UserEntityInterface {
 
             $user = new RandomUserEntity();
             $user->setLastname( $userDto->getLastname() );

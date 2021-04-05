@@ -26,7 +26,7 @@
         const MAPPING = [
             InvalidUserException::class       => NotFoundHttpException::class,
             NotEncodableValueException::class => BadRequestHttpException::class,
-            DtoValidationException::class => BadRequestHttpException::class,
+            DtoValidationException::class     => BadRequestHttpException::class,
         ];
 
         public function __construct( KernelInterface $kernel ) {
@@ -47,7 +47,7 @@
         public function onKernelException( ExceptionEvent $event ): void {
 
             $originalException = $event->getThrowable();
-            $mappedException = $this->mapExceptions( $originalException );
+            $mappedException   = $this->mapExceptions( $originalException );
 
             $statusCode = $mappedException instanceof HttpExceptionInterface ? $mappedException->getStatusCode()
                     : Response::HTTP_INTERNAL_SERVER_ERROR;

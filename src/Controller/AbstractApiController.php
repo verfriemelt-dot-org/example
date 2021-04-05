@@ -14,7 +14,11 @@
     abstract class AbstractApiController
     extends AbstractController {
 
-        protected function emitJsonResponse( mixed $data, int $statusCode = Response::HTTP_OK, JsonResponse $response = null, ): JsonResponse {
+        protected function emitJsonResponse(
+            mixed $data,
+            int $statusCode = Response::HTTP_OK,
+            JsonResponse $response = null
+        ): JsonResponse {
 
             if ( $response === null ) {
                 $response = new JsonResponse();

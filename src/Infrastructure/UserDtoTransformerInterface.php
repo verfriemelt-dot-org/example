@@ -9,14 +9,14 @@
     interface UserDtoTransformerInterface {
 
         /**
-         * transoforms a single UserEntity to the UserDTO
+         * converts a single UserEntity to a UserResponseDto Instance
          * @param UserEntityInterface $user
          * @return UserResponseDto
          */
         public function transformFromObject( UserEntityInterface $user ): UserResponseDto;
 
         /**
-         * transforms an array user UserEntities to UserDTOs
+         * converts an array UserEntities to an array of UserResponseDtos
          * @param UserEntityInterface $users
          * @return UserResponseDto[]
          */

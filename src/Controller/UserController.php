@@ -76,7 +76,7 @@
          *          @OA\JsonContent(ref=@Model(type=UserInputDto::class))
          * )
          * @OA\Response(
-         *     response=200,
+         *     response=201,
          *     description="returns the newly created user",
          *     @OA\JsonContent(
          *        ref=@Model(type=UserResponseDto::class)
@@ -90,7 +90,7 @@
             $userEntity = $this->repository->mapAndPersist( $userInput );
             $dto        = $this->transformer->transformFromObject( $userEntity );
 
-            return $this->emitJsonResponse( $dto );
+            return $this->emitJsonResponse( $dto, Response::HTTP_CREATED );
         }
 
         /**
@@ -108,14 +108,14 @@
          * @OA\Response( response=404, description="user not found" )
          */
         #[ Route( '/api/v1/user/{id}', name: 'user-update', methods: [ 'put' ] ) ]
-        public function update( int $id, Request $request,
-            UserInputDto $userInput ): JsonResponse {
+        public function update( int $id, Request $request, UserInputDto $userInput ): JsonResponse {
 
-            $instance       = $this->repository->findOneById( $id );
-            $updateInstance = $this->repository->mapAndPersist( $userInput,
-                $instance );
+            $existingUserEntity = $this->repository->findOneById( $id );
+            $updatedUserEntity  = $this->repository->mapAndPersist(
+                $userInput, $existingUserEntity
+            );
 
-            return $this->emitJsonResponse( $this->transformer->transformFromObject( $updateInstance ) );
+            return $this->emitJsonResponse( $this->transformer->transformFromObject( $updatedUserEntity ) );
         }
 
         /**
@@ -129,8 +129,8 @@
                 methods: [ 'delete' ] ) ]
         public function delete( int $id, Request $request ): JsonResponse {
 
-            $instance = $this->repository->findOneById( $id );
-            $this->repository->delete( $instance );
+            $userEntity = $this->repository->findOneById( $id );
+            $this->repository->delete( $userEntity );
 
             return new JsonResponse( [], Response::HTTP_NO_CONTENT );
         }
