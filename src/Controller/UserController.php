@@ -49,10 +49,10 @@
         /**
          * Returns a User with the given id.
          *
-         * @OA\Parameter(name="id", in="path", @OA\Schema(type="int"))
+         * @OA\Parameter(name="id", in="path", @OA\Schema(type="string"))
          * @OA\Response(
          *     response=200,
-         *     description="Returns all users",
+         *     description="Returns requested user",
          *     @OA\JsonContent(
          *        ref=@Model(type=UserResponseDto::class)
          *     )
@@ -82,6 +82,7 @@
          *        ref=@Model(type=UserResponseDto::class)
          *     )
          * )
+         * @OA\Response( response=400, description="malformed supplied" )
          */
         #[ Route( '/api/v1/user', name: 'user-create', methods: [ 'post' ] ) ]
         public function create( Request $request, UserInputDto $userInput ): JsonResponse {
@@ -95,7 +96,7 @@
         /**
          * Updates a User with the given id.
          *
-         * @OA\Parameter(name="id", in="path", @OA\Schema(type="int"))
+         * @OA\Parameter(name="id", in="path", @OA\Schema(type="string"))
          * @OA\Response(
          *      response=200,
          *      description="deletion was successful",
@@ -120,7 +121,7 @@
         /**
          * Deletes a User with the given id.
          *
-         * @OA\Parameter(name="id", in="path", @OA\Schema(type="int"))
+         * @OA\Parameter(name="id", in="path", @OA\Schema(type="string"))
          * @OA\Response( response=204, description="deletion was successful" )
          * @OA\Response( response=404, description="user not found" )
          */

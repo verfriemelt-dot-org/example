@@ -9,9 +9,12 @@
     use \Symfony\Component\HttpFoundation\JsonResponse;
     use \Symfony\Component\HttpFoundation\Response;
     use \Symfony\Component\HttpKernel\Event\ExceptionEvent;
+    use \Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
     use \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
     use \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
     use \Symfony\Component\HttpKernel\KernelInterface;
+    use \Symfony\Component\Serializer\Exception\NotEncodableValueException;
+    use \Throwable;
 
     class ExceptionListener {
 
@@ -21,14 +24,16 @@
          * used to map Domainspecific Exceptions to HttpExceptions
          */
         const MAPPING = [
-            InvalidUserException::class => NotFoundHttpException::class
+            InvalidUserException::class       => NotFoundHttpException::class,
+            NotEncodableValueException::class => BadRequestHttpException::class,
+            DtoValidationException::class => BadRequestHttpException::class,
         ];
 
         public function __construct( KernelInterface $kernel ) {
             $this->kernel = $kernel;
         }
 
-        public function mapExceptions( \Throwable $exception ): \Throwable {
+        public function mapExceptions( Throwable $exception ): Throwable {
 
             if ( !isset( self::MAPPING[$exception::class] ) ) {
                 return $exception;
@@ -41,26 +46,26 @@
 
         public function onKernelException( ExceptionEvent $event ): void {
 
-            $exception = $event->getThrowable();
-            $exception = $this->mapExceptions( $exception );
+            $originalException = $event->getThrowable();
+            $mappedException = $this->mapExceptions( $originalException );
 
-            $statusCode = $exception instanceof HttpExceptionInterface ? $exception->getStatusCode()
+            $statusCode = $mappedException instanceof HttpExceptionInterface ? $mappedException->getStatusCode()
                     : Response::HTTP_INTERNAL_SERVER_ERROR;
 
             $payload = [
                 'error' => [
-                    'code'    => $exception->getCode(),
-                    'message' => $exception->getMessage(),
+                    'code'    => $mappedException->getCode(),
+                    'message' => $mappedException->getMessage(),
                 ],
             ];
 
-            if ( $exception instanceof DtoValidationException ) {
-                $payload['error']['validationErrors'] = $exception->getValidationErrors();
+            if ( $originalException instanceof DtoValidationException ) {
+                $payload['error']['validationErrors'] = $originalException->getValidationErrors();
             } else {
 
                 // print stracktrace only during dev
                 if ( $this->kernel->getEnvironment() === 'dev' ) {
-                    $payload['error']['trace'] = $exception->getTrace();
+                    $payload['error']['trace'] = $originalException->getTrace();
                 }
             }
 

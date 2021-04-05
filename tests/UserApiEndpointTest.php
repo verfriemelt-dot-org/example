@@ -7,7 +7,7 @@
     use \Symfony\Bundle\FrameworkBundle\KernelBrowser;
     use \Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-    class UserApiEndointTest
+    class UserApiEndpointTest
     extends WebTestCase {
 
         protected function makeRequest( string $endpoint, array $data = null ): KernelBrowser {
