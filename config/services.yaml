@@ -31,7 +31,7 @@ services:
     # please note that last definitions always *replace* previous ones
     App\Controller\UserController:
         arguments:
-            $repository: '@App\Infrastructure\JsonUser\JsonUserRepository'
+            $repository: '@App\Infrastructure\RandomUser\RandomUserRepository'
 
     App\EventListener\ExceptionListener:
         tags:
