@@ -38,6 +38,7 @@
         ];
 
         /**
+         * generates a random name
          *
          * @return string[]
          */
@@ -48,6 +49,9 @@
             ];
         }
 
+        /**
+         * {@inheritdoc}
+         */
         public function findOneById( int $id ): UserEntityInterface {
 
             $user = new RandomUserEntity();
@@ -61,6 +65,9 @@
             return $user;
         }
 
+        /**
+         * {@inheritdoc}
+         */
         public function all( int $amount = 10, int $offset = 0 ): array {
 
             return array_map(
@@ -69,6 +76,9 @@
             );
         }
 
+        /**
+         * {@inheritdoc}
+         */
         public function mapAndPersist( UserInputDto $userDto,
             UserEntityInterface $user = null ): UserEntityInterface {
 
@@ -80,14 +90,23 @@
             return $user;
         }
 
+        /**
+         * {@inheritdoc}
+         */
         public function persist( UserEntityInterface $user ): UserEntityInterface {
             return $user;
         }
 
+        /**
+         * {@inheritdoc}
+         */
         public function delete( UserEntityInterface $user ): bool {
             return false;
         }
 
+        /**
+         * {@inheritdoc}
+         */
         public function flush(): static {
             return $this;
         }

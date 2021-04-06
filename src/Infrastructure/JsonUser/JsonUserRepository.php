@@ -43,6 +43,11 @@
             $this->loadFromDisk();
         }
 
+        /**
+         * Reads the Collection from Disk
+         *
+         * @return void
+         */
         private function loadFromDisk(): void {
 
             if ( !file_exists( $this->getStoragePath() ) ) {
@@ -60,10 +65,18 @@
             }
         }
 
+        /**
+         * returns the absolut storage path
+         *
+         * @return string
+         */
         public function getStoragePath(): string {
             return $this->kernel->getProjectDir() . $this->storagePath;
         }
 
+        /**
+         * {@inheritdoc}
+         */
         public function findOneById( int $id ): UserEntityInterface {
 
             $user = array_filter( $this->collection,
@@ -76,10 +89,20 @@
             return current( $user );
         }
 
+        /**
+         * {@inheritdoc}
+         */
         public function all(): array {
             return $this->collection;
         }
 
+        /**
+         * Ensure that onty a JsonUserEntity will get passed in
+         *
+         * @param UserEntityInterface $user
+         * @return JsonUserEntity
+         * @throws RuntimeException
+         */
         protected function validateInstance( UserEntityInterface $user ): JsonUserEntity {
 
             if ( !$user instanceof JsonUserEntity ) {
@@ -90,6 +113,9 @@
             return $user;
         }
 
+        /**
+         * {@inheritdoc}
+         */
         public function mapAndPersist( UserInputDto $userDto,
             UserEntityInterface $user = null ): UserEntityInterface {
 
@@ -107,6 +133,9 @@
             return $user;
         }
 
+        /**
+         * {@inheritdoc}
+         */
         public function flush(): static {
 
             file_put_contents(
@@ -119,6 +148,9 @@
             return $this;
         }
 
+        /**
+         * {@inheritdoc}
+         */
         public function persist( UserEntityInterface $user ): UserEntityInterface {
 
             $user = $this->validateInstance( $user );
@@ -129,6 +161,11 @@
             return $user;
         }
 
+        /**
+         * Returns the next valid UserId
+         *
+         * @return int
+         */
         public function getNextUserId(): int {
 
             if ( count( $this->collection ) === 0 ) {
@@ -138,19 +175,9 @@
             return (int) max( array_keys( $this->collection ) ) + 1;
         }
 
-        protected function addUser( JsonUserEntity $user ): JsonUserEntity {
-            $user->setId( $this->getNextUserId() );
-            $this->collection[$user->getId()] = $user;
-
-            return $user;
-        }
-
-        protected function updateUser( JsonUserEntity $user ): JsonUserEntity {
-
-            $this->collection[$user->getId()] = $user;
-            return $user;
-        }
-
+        /**
+         * {@inheritdoc}
+         */
         public function delete( UserEntityInterface $user ): bool {
 
             $user = $this->validateInstance( $user );
@@ -166,4 +193,28 @@
             return true;
         }
 
+        /**
+         * adds new user to the interval collection
+         *
+         * @param JsonUserEntity $user
+         * @return JsonUserEntity
+         */
+        protected function addUser( JsonUserEntity $user ): JsonUserEntity {
+            $user->setId( $this->getNextUserId() );
+            $this->collection[$user->getId()] = $user;
+
+            return $user;
+        }
+
+        /**
+         * updates user within the internal collection
+         *
+         * @param JsonUserEntity $user
+         * @return JsonUserEntity
+         */
+        protected function updateUser( JsonUserEntity $user ): JsonUserEntity {
+
+            $this->collection[$user->getId()] = $user;
+            return $user;
+        }
     }
