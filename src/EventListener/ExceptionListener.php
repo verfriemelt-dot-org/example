@@ -20,10 +20,7 @@
 
         private KernelInterface $kernel;
 
-        /**
-         * used to map Domainspecific Exceptions to HttpExceptions
-         */
-        const MAPPING = [
+        const EXCEPTION_MAP = [
             InvalidUserException::class       => NotFoundHttpException::class,
             NotEncodableValueException::class => BadRequestHttpException::class,
             DtoValidationException::class     => BadRequestHttpException::class,
@@ -33,13 +30,19 @@
             $this->kernel = $kernel;
         }
 
+        /**
+         * Maps out Domainspecific and Internal Exceptions to HttpExceptions
+         *
+         * @param Throwable $exception
+         * @return Throwable
+         */
         public function mapExceptions( Throwable $exception ): Throwable {
 
-            if ( !isset( self::MAPPING[$exception::class] ) ) {
+            if ( !isset( self::EXCEPTION_MAP[$exception::class] ) ) {
                 return $exception;
             }
 
-            $mappedException = self::MAPPING[$exception::class];
+            $mappedException = self::EXCEPTION_MAP[$exception::class];
 
             return new $mappedException( $exception->getMessage() );
         }

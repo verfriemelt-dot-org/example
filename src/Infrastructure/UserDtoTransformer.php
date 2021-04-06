@@ -9,6 +9,9 @@
     class UserDtoTransformer
     implements UserDtoTransformerInterface {
 
+        /**
+         * {@inheritdoc}
+         */
         public function transformFromObject( UserEntityInterface $user ): UserResponseDto {
 
             return new UserResponseDto(
@@ -16,6 +19,9 @@
             );
         }
 
+        /**
+         * {@inheritdoc}
+         */
         public function transformFromObjects( UserEntityInterface ...$users ): array {
 
             return array_map(
@@ -25,4 +31,3 @@
         }
 
     }
-    

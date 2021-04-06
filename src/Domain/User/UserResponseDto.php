@@ -10,11 +10,26 @@
     class UserResponseDto
     implements DtoInterface {
 
+        /**
+         * the userid if set
+         *
+         * @var string
+         */
         private ?int $id = null;
 
+        /**
+         * name of the user
+         *
+         * @var string
+         */
         #[ NotBlank ]
         private string $name;
 
+        /**
+         * lastname of the user
+         *
+         * @var string
+         */
         #[ NotBlank ]
         private string $lastname;
 

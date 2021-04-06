@@ -11,10 +11,20 @@
     class UserInputDto
     implements DtoInterface {
 
+        /**
+         * name of the user
+         *
+         * @var string
+         */
         #[ NotBlank( message: 'name must not be empty' ) ]
         #[ Length( min: 1, max: 50 ) ]
         private string $name = '';
 
+        /**
+         * lastname of the user
+         *
+         * @var string
+         */
         #[ NotBlank( message: 'lastname must not be empty' ) ]
         #[ Length( min: 1, max: 50 ) ]
         private string $lastname = '';

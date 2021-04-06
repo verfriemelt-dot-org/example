@@ -14,6 +14,14 @@
     abstract class AbstractApiController
     extends AbstractController {
 
+        /**
+         * Emits a JsonReponse serialized with a GetSetMethodNormalizer
+         *
+         * @param mixed $data
+         * @param int $statusCode
+         * @param JsonResponse $response
+         * @return JsonResponse
+         */
         protected function emitJsonResponse(
             mixed $data,
             int $statusCode = Response::HTTP_OK,
